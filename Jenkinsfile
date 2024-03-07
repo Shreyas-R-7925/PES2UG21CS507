@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-              bu 'PES2UG21CS507-1'
+              build 'PES2UG21CS507-1'
               sh 'g++ main.cpp -o output'
                 // Add shell script to compile .cpp file (use 'sh' for Unix-based systems, 'bat' for Windows)
             }
@@ -13,6 +13,7 @@ pipeline {
         stage('Test') {
             steps {
               sh './output' 
+              sh 'mvn test'
                 // Add shell script to test .cpp file
             }
         }
