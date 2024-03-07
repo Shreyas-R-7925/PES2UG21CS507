@@ -1,34 +1,35 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Build') {
-            steps {
-              build 'PES2UG21CS507-1'
-              sh 'g++ main.cpp -o output'
-                // Add shell script to compile .cpp file (use 'sh' for Unix-based systems, 'bat' for Windows)
-            }
+pipeline{
+    agent any 
+        stages{
+              stage('clone repository'){
+                steps{
+                    checkout([$class:'GitSCM',
+                    branches:[[name:'*/main']],
+                    userRemoteConfigs: [[url:'https://github.com/Shreyas-R-7925/PES2UG21CS507.git']]])
+                }
+              }
+              stage('Build'){
+                steps{
+                    build 'PES2UG21CS507-1'
+                    sh 'g++ Jenkins.cpp -o output'
+                    echo 'Build Stage Successful'
+                }
+              }
+              stage('Test'){
+                steps{
+                    sh './output'
+                    echo 'test stage successfully'
+                }
+              }
+              stage('Deploy'){
+                steps{
+                    echo 'deployment successfull'
+                }
+              }
         }
-
-        stage('Test') {
-            steps {
-              sh './output' 
-              sh 'mvn test'
-                // Add shell script to test .cpp file
+        post{
+            failure{
+                echo 'pipeline failed'
             }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'deploy'
-                // Add shell script for deployment if needed
-            }
-        }
-    }
-
-    post {
-        failure {
-            echo 'pipeline failed'
-        }
+        }
     }
-}
